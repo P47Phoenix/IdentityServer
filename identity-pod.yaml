@@ -1,0 +1,43 @@
+apiVersion: apps/v1beta1 # for versions before 1.6.0 use extensions/v1beta1
+kind: Deployment
+metadata:
+  name: identity-api
+  namespace: identity-tier
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: identity-api
+    spec:
+      containers:
+      - name: identity-api
+        image: p47phoenix/host.identityserver:latest
+        imagePullPolicy: Always
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Production
+        ports:
+        - containerPort: 5000
+          protocol: TCP
+        resources:
+          requests:
+            memory: 100Mi
+          limits:
+            memory: 100Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: identity-api
+  namespace: identity-tier
+  labels:
+    app: identity-api
+spec:
+  type: NodeIP
+  ports:
+    - port: 443
+      protocol: TCP
+      targetPort: 5000
+  selector:
+    app: identity-api
