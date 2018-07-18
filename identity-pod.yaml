@@ -34,7 +34,7 @@ metadata:
   labels:
     app: identity-api
 spec:
-  type: NodeIP
+  type: NodePort
   ports:
     - port: 443
       protocol: TCP
